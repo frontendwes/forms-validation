@@ -5,7 +5,7 @@ import { Container, Typography } from "@material-ui/core";
 function App() {
   return (
     <Container component="article" maxWidth="sm">
-      <Typography align="center">Formulario de Cadastroa</Typography>
+      <Typography align="center">FORMULARIO DE CADASTRO</Typography>
       <FormularioCadastro />
     </Container>
   );
