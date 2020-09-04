@@ -1,10 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, TextField, Switch, FormControlLabel } from "@material-ui/core";
 
 const FormularioCadastro = () => {
+  const [nome, setNome] = useState("");
+  const [sobrenome, setSobrenome] = useState("");
+  const [cpf, setCpf] = useState("");
+
   return (
-    <form>
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        console.log(nome, sobrenome, cpf);
+      }}
+    >
       <TextField
+        value={nome}
+        onChange={(event) => setNome(event.target.value)}
         variant="outlined"
         id="nome"
         label="nome"
@@ -12,6 +23,8 @@ const FormularioCadastro = () => {
         margin="normal"
       />
       <TextField
+        value={sobrenome}
+        onChange={(event) => setSobrenome(event.target.value)}
         variant="outlined"
         id="sobrenome"
         label="sobrenome"
@@ -19,6 +32,8 @@ const FormularioCadastro = () => {
         margin="normal"
       />
       <TextField
+        value={cpf}
+        onChange={(event) => setCpf(event.target.value)}
         variant="outlined"
         id="cpf"
         label="cpf"
