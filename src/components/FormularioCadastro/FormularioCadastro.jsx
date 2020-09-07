@@ -1,16 +1,24 @@
 import React, { useState } from "react";
 import { Button, TextField, Switch, FormControlLabel } from "@material-ui/core";
 
-const FormularioCadastro = () => {
+const FormularioCadastro = ({ requisicao, validaCpf }) => {
   const [nome, setNome] = useState("");
   const [sobrenome, setSobrenome] = useState("");
   const [cpf, setCpf] = useState("");
+  const [promocoes, setPromocoes] = useState(true);
+  const [novidades, setNovidades] = useState(true);
+  const [errors, setErros] = useState({
+    cpf: {
+      valido: false,
+      message: "",
+    },
+  });
 
   return (
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        console.log(nome, sobrenome, cpf);
+        requisicao(nome);
       }}
     >
       <TextField
@@ -32,6 +40,12 @@ const FormularioCadastro = () => {
         margin="normal"
       />
       <TextField
+        error={errors.cpf.valido}
+        helperText={errors.cpf.message}
+        onBlur={(event) => {
+          const ehValido = validaCpf(cpf);
+          setErros({ cpf: ehValido });
+        }}
         value={cpf}
         onChange={(event) => setCpf(event.target.value)}
         variant="outlined"
@@ -42,12 +56,25 @@ const FormularioCadastro = () => {
       />
       <FormControlLabel
         label="promoçoes"
-        control={<Switch name="promoçoes" defaultChecked color="primary" />}
+        control={
+          <Switch
+            onChange={(event) => setPromocoes(event.target.checked)}
+            name="promoçoes"
+            checked={promocoes}
+            color="primary"
+          />
+        }
       />
-
       <FormControlLabel
         label="novidades"
-        control={<Switch name="novidades" defaultChecked color="primary" />}
+        control={
+          <Switch
+            onChange={(event) => setNovidades(event.target.checked)}
+            name="novidades"
+            checked={novidades}
+            color="primary"
+          />
+        }
       />
       <Button color="primary" variant="contained" type="submit">
         Confirmar
