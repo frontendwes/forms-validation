@@ -1,30 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button, TextField, Switch, FormControlLabel } from "@material-ui/core";
+import ValidacoesCadastro from "../../context/ValidacoesCadastro";
+import useErros from "../../hooks/useErros";
 
-const DadosPessoais = ({ requisicao, validaCpf }) => {
+const DadosPessoais = ({ aoEnviar }) => {
   const [nome, setNome] = useState("");
   const [sobrenome, setSobrenome] = useState("");
   const [cpf, setCpf] = useState("");
   const [promocoes, setPromocoes] = useState(true);
   const [novidades, setNovidades] = useState(true);
-  const [errors, setErros] = useState({
-    cpf: {
-      valido: false,
-      message: "",
-    },
-  });
+
+  const validacoes = useContext(ValidacoesCadastro);
+  const [erros, validarCampo, possoEnviar] = useErros(validacoes);
 
   return (
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        requisicao(nome);
+        if (possoEnviar()) {
+          aoEnviar({ nome, sobrenome, cpf, promocoes, novidades });
+        }
       }}
     >
       <TextField
         id="nome"
         label="nome"
         value={nome}
+        name="nome"
+        onBlur={validarCampo}
+        error={!erros.nome.valido}
+        helperText={erros.nome.mensagem}
         onChange={(event) => setNome(event.target.value)}
         variant="outlined"
         fullWidth
@@ -32,6 +37,7 @@ const DadosPessoais = ({ requisicao, validaCpf }) => {
       />
       <TextField
         value={sobrenome}
+        name="sobrenome"
         onChange={(event) => setSobrenome(event.target.value)}
         variant="outlined"
         id="sobrenome"
@@ -40,12 +46,10 @@ const DadosPessoais = ({ requisicao, validaCpf }) => {
         margin="normal"
       />
       <TextField
-        error={errors.cpf.valido}
-        helperText={errors.cpf.message}
-        onBlur={(event) => {
-          const ehValido = validaCpf(cpf);
-          setErros({ cpf: ehValido });
-        }}
+        name="cpf"
+        error={!erros.cpf.valido}
+        helperText={erros.cpf.mensagem}
+        onBlur={validarCampo}
         value={cpf}
         onChange={(event) => setCpf(event.target.value)}
         variant="outlined"
@@ -77,7 +81,7 @@ const DadosPessoais = ({ requisicao, validaCpf }) => {
         }
       />
       <Button color="primary" variant="contained" type="submit">
-        Confirmar
+        Proximo
       </Button>
     </form>
   );
